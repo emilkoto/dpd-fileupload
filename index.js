@@ -199,6 +199,7 @@ Fileupload.prototype.handle = function (ctx, next) {
                     if (err) return processDone(err);
                     debug('stored after event.upload.run %j', err || result || 'none');
                     var cloneResult = _.clone(result);
+                    cloneResult.fieldName = file.fieldName;
                     resultFiles.push(cloneResult);
                     processDone();
                 });
@@ -211,6 +212,7 @@ Fileupload.prototype.handle = function (ctx, next) {
         form.parse(req)
             .on('file', function (name, file) {
                 debug("File %j received", file.name);
+                file.fieldName = name;
                 if (uniqueFilename) {
                     file.originalFilename = file.name;
                     file.name = md5(Date.now()) + '.' + file.name.split('.').pop();
