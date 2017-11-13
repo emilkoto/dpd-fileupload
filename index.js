@@ -96,7 +96,7 @@ Fileupload.prototype.handle = function (ctx, next) {
     var me = ctx.session.user;
 
     if (this.config.authorization && !me) {
-        return ctx.done({ statusCode: 403, message: "You're not authorized to upload / modify files." });
+        return ctx.done({ statusCode: 401, message: "You're not authorized to upload / modify files." });
     }
 
     if (req.method === "POST" || req.method === "PUT") {
