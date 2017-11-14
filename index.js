@@ -175,6 +175,7 @@ Fileupload.prototype.handle = function (ctx, next) {
         var config = this.config;
 
         var renameAndStore = function (file) {
+
             fs.rename(file.path, path.join(uploadDir, file.name), function (err) {
                 if (err) return processDone(err);
                 debug("File renamed after event.upload.run: %j", err || path.join(uploadDir, file.name));
@@ -194,7 +195,7 @@ Fileupload.prototype.handle = function (ctx, next) {
                 storedObject.type = mime.lookup(file.name);
                 if (storedObject.id) delete storedObject.id;
                 if (storedObject._id) delete storedObject._id;
-
+                if(err_general)
                 self.store.insert(storedObject, function (err, result) {
                     if (err) return processDone(err);
                     debug('stored after event.upload.run %j', err || result || 'none');
@@ -226,6 +227,9 @@ Fileupload.prototype.handle = function (ctx, next) {
                         uniqueFilename: uniqueFilename,
                         subdir: subdir
                     }, function (err) {
+                        if(fs.existsSync(file.path)){
+                            fs.unlinkSync(file.path);
+                        }
                         if (err) return processDone(err);
                         renameAndStore(file);
                     });
