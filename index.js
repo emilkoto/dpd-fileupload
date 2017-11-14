@@ -195,7 +195,6 @@ Fileupload.prototype.handle = function (ctx, next) {
                 storedObject.type = mime.lookup(file.name);
                 if (storedObject.id) delete storedObject.id;
                 if (storedObject._id) delete storedObject._id;
-                if(err_general)
                 self.store.insert(storedObject, function (err, result) {
                     if (err) return processDone(err);
                     debug('stored after event.upload.run %j', err || result || 'none');
@@ -227,10 +226,13 @@ Fileupload.prototype.handle = function (ctx, next) {
                         uniqueFilename: uniqueFilename,
                         subdir: subdir
                     }, function (err) {
-                        if(fs.existsSync(file.path)){
-                            fs.unlinkSync(file.path);
+
+                        if (err) {
+                            if (fs.existsSync(file.path)) {
+                                fs.unlinkSync(file.path);
+                            }
+                            return processDone(err);
                         }
-                        if (err) return processDone(err);
                         renameAndStore(file);
                     });
                 } else {
