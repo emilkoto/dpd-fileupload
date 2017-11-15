@@ -121,18 +121,16 @@ Fileupload.prototype.handle = function (ctx, next) {
             if (remainingFile === 0) {
                 debug("Response sent: ", resultFiles);
                 // return ctx.done(null, resultFiles);
-
-
                 if (self.events.afterCommit) {
                     self.events.afterCommit.run(ctx, {
                         url: ctx.url,
                         result: resultFiles,
                     }, function (err) {
                         if (err) return ctx.done(err);
-                        return ctx.done(null, resultFiles); // TODO not clear what to do here yet
+                        //return ctx.done(null, resultFiles); // TODO not clear what to do here yet
                     });
                 } else {
-                    return ctx.done(null, resultFiles); // TODO not clear what to do here yet
+                    //return ctx.done(null, resultFiles); // TODO not clear what to do here yet
                 }
 
 
