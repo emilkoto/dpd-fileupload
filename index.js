@@ -206,7 +206,11 @@ Fileupload.prototype.handle = function (ctx, next) {
         };
         // emil_1
         form.on('field', (name, value) => { ctx.body[name] = value });
-
+        form.parse(req, (err, fields, files)=>{
+            if(Object.keys(files).length == 0){
+                return processDone(new Error('Empty files'));
+            }
+        });
         form.parse(req)
             .on('file', function (name, file) {
                 debug("File %j received", file.name);
